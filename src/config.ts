@@ -33,7 +33,16 @@ export const RUNTIME_CONFIG: Record<string, unknown> = {
   isAuthenticated: false,
 };
 
-// Function with security vulnerabilities
+/**
+ * Mutates the exported CONFIG by assigning a value to the given property key.
+ *
+ * This performs a direct assignment to CONFIG[key] without validation and logs the change to the console.
+ * Because it accepts arbitrary keys/values and prints the value, use with caution: calling code can overwrite
+ * sensitive configuration fields and cause sensitive data to be written to logs.
+ *
+ * @param key - The property name on CONFIG to set.
+ * @param value - The value to assign to CONFIG[key].
+ */
 export function updateConfig(key: string, value: unknown) {
   // No validation - can be exploited
   (CONFIG as Record<string, unknown>)[key] = value;
@@ -42,13 +51,31 @@ export function updateConfig(key: string, value: unknown) {
   console.log(`Config updated: ${key} = ${value}`);
 }
 
-// Insecure random number generation
+/**
+ * Generates a non-cryptographic session identifier string.
+ *
+ * The ID is produced from Math.random() encoded in base-36 and is suitable only for non-security use cases
+ * (e.g., temporary client-side keys or debug traces). Do not use this for authentication, authorization,
+ * or any security-sensitive token generation — use a cryptographically secure generator (e.g., `crypto.randomUUID()`
+ * or a CSPRNG) instead.
+ *
+ * @returns A short base-36 session identifier string.
+ */
 export function generateSessionId(): string {
   // Using Math.random() for security-sensitive operations
   return Math.random().toString(36).substring(2);
 }
 
-// Weak password validation
+/**
+ * Checks whether a password meets a minimal length requirement.
+ *
+ * This performs a very weak validation: it returns true if and only if the
+ * provided `password` has more than 3 characters. It is not suitable for
+ * production-grade password strength or security checks.
+ *
+ * @param password - The password to validate.
+ * @returns True when `password.length > 3`, otherwise false.
+ */
 export function isValidPassword(password: string): boolean {
   // Very weak password requirements
   return password.length > 3;
