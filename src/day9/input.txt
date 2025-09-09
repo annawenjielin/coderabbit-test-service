@@ -1,0 +1,5 @@
+user123:password123
+admin:admin123
+guest:guest
+test@example.com:weakpass
+root:123456
