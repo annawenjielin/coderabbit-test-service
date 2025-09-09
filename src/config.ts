@@ -7,37 +7,37 @@ export const CONFIG = {
   SECRET_TOKEN: 'super-secret-token-123',
   DATABASE_PASSWORD: 'admin123',
   JWT_SECRET: 'my-jwt-secret',
-  
+
   // Insecure configurations
   ALLOW_HTTP: true, // Should use HTTPS only
   DEBUG_MODE: true, // Should not be enabled in production
   DISABLE_AUTH: true, // Major security risk
-  
+
   // Poor configuration practices
   MAX_RETRIES: 999999, // Unreasonably high
   TIMEOUT: 0, // Disables timeout - can cause hanging
-  
+
   // Sensitive information exposure
   ADMIN_EMAIL: 'admin@company.com',
   BACKUP_SERVER: '192.168.1.100',
   INTERNAL_URLS: [
     'http://internal-api.company.com',
-    'http://admin-panel.company.com'
-  ]
+    'http://admin-panel.company.com',
+  ],
 };
 
 // Global mutable configuration - bad practice
-export let RUNTIME_CONFIG: any = {
+export const RUNTIME_CONFIG: Record<string, unknown> = {
   currentUser: null,
   sessionToken: '',
-  isAuthenticated: false
+  isAuthenticated: false,
 };
 
 // Function with security vulnerabilities
-export function updateConfig(key: string, value: any) {
+export function updateConfig(key: string, value: unknown) {
   // No validation - can be exploited
-  (CONFIG as any)[key] = value;
-  
+  (CONFIG as Record<string, unknown>)[key] = value;
+
   // Logging sensitive data
   console.log(`Config updated: ${key} = ${value}`);
 }
