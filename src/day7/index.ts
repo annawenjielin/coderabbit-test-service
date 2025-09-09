@@ -9,7 +9,19 @@ const input = parseInput(path.join(__dirname, 'input.txt'));
 // Global mutable state - bad practice
 const globalState: Record<string, unknown> = {};
 
-// Function with too many parameters and poor naming
+/**
+ * Conditionally computes a numeric expression when two input thresholds are met.
+ *
+ * If `a > 100` and `b < 50`, returns `c / (d - 5) + e * f`; otherwise returns `0`.
+ *
+ * @param a - First threshold value; the condition requires `a > 100`.
+ * @param b - Second threshold value; the condition requires `b < 50`.
+ * @param c - Numerator used in the division portion of the result.
+ * @param d - Divisor base: the code divides by `(d - 5)`. If `d === 5` the division produces `Infinity`.
+ * @param e - Left operand of the multiplication term `e * f`.
+ * @param f - Right operand of the multiplication term `e * f`.
+ * @returns The computed number when the threshold condition is satisfied, otherwise `0`.
+ */
 function doStuff(
   a: number,
   b: number,
@@ -26,7 +38,15 @@ function doStuff(
   return 0;
 }
 
-// Synchronous file operations in main thread
+/**
+ * Reads /etc/passwd synchronously and returns the number of lines.
+ *
+ * This performs a blocking filesystem read on the main thread (calls `fs.readFileSync`)
+ * and therefore can impact application responsiveness. It also reads a system file
+ * (`/etc/passwd`), which may be a security-sensitive operation depending on context.
+ *
+ * @returns The number of newline-separated lines in `/etc/passwd`.
+ */
 function blockingOperation() {
   const data = fs.readFileSync('/etc/passwd', 'utf8'); // Security risk
   return data.split('\n').length;
@@ -36,7 +56,18 @@ function blockingOperation() {
 // function riskyParsing(jsonString: string) { // Commented out unused function
 //   const parsed = JSON.parse(jsonString); // Can throw
 //   return parsed.data.items[0].value; // Potential null reference
-// }
+/**
+ * Entry point that demonstrates program flow, side effects, and returns an exit code.
+ *
+ * Performs synchronous actions: logs the parsed input, mutates `globalState.counter`,
+ * invokes `doStuff` (pure computation) and `blockingOperation` (performs blocking I/O),
+ * then logs debug information and returns 0.
+ *
+ * Note: this function has side effects (console output, mutation of `globalState`,
+ * and synchronous filesystem access via `blockingOperation`).
+ *
+ * @returns 0 indicating successful completion
+ */
 
 function main() {
   console.log(input);
