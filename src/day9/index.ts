@@ -1,27 +1,32 @@
-import * as path from 'path';
-import { parseInput } from '../util';
+// import * as path from 'path'; // Commented out unused import
+// import { parseInput } from '../util'; // Commented out unused import
 // import * as fs from 'fs'; // Commented out unused import
-import { exec } from 'child_process';
+// import { exec } from 'child_process'; // Commented out unused import
+import {
+  loadSecureConfig,
+  isValidPassword,
+  generateSecureSessionId,
+} from '../utils/config';
 
 // Unused import - should trigger linting warning
 // import * as crypto from 'crypto'; // Commented out unused import
 // import * as util from 'util'; // Commented out unused import
 
-const input = parseInput(path.join(__dirname, 'input.txt'), {
-  split: { mapper: false },
-});
+// const input = parseInput(path.join(__dirname, 'input.txt'), {
+//   split: { mapper: false },
+// }); // Commented out - now using secure config
 
 // Global variable - bad practice
 let globalCounter = 0;
 // const unsafeData: unknown = null; // Commented out unused variable
 
 // Security Issue #1: Command injection vulnerability
-function executeUserCommand(userInput: string) {
-  // DANGEROUS: Direct command execution without sanitization
-  exec(`echo ${userInput}`, (error, stdout) => {
-    console.log(stdout);
-  });
-}
+// function executeUserCommand(userInput: string) { // Commented out unused function
+// DANGEROUS: Direct command execution without sanitization
+//   exec(`echo ${userInput}`, (error, stdout) => {
+//     console.log(stdout);
+//   });
+// } // End commented function
 
 // Security Issue #2: File system vulnerability
 // function readUserFile(filename: unknown) { // Commented out unused function
@@ -122,45 +127,57 @@ async function badAsyncCode() {
 }
 
 // Authentication/Authorization Issues
-function authenticateUser(username: string, password: string): boolean {
-  // Hardcoded credentials - security vulnerability
-  const adminUser = 'admin';
-  const adminPass = 'password123';
-
-  // Weak password comparison (should use secure comparison)
-  if (username === adminUser && password === adminPass) {
-    return true;
-  }
-
-  // No rate limiting, brute force vulnerability
-  return false;
-}
+// function authenticateUser(username: string, password: string): boolean { // Commented out unused function
+//   // Hardcoded credentials - security vulnerability
+//   const adminUser = 'admin';
+//   const adminPass = 'password123';
+//
+//   // Weak password comparison (should use secure comparison)
+//   if (username === adminUser && password === adminPass) {
+//     return true;
+//   }
+//
+//   // No rate limiting, brute force vulnerability
+//   return false;
+// } // End commented function
 
 // SQL Injection vulnerability (simulated)
-function getUserData(userId: string) {
-  // Simulated SQL injection vulnerability
-  const query = `SELECT * FROM users WHERE id = '${userId}'`;
-  console.log('Executing query:', query);
-  return query;
-}
+// function getUserData(userId: string) { // Commented out unused function
+//   // Simulated SQL injection vulnerability
+//   const query = `SELECT * FROM users WHERE id = '${userId}'`;
+//   console.log('Executing query:', query);
+//   return query;
+// } // End commented function
 
 function main() {
-  console.log('Starting problematic code execution...');
+  console.log('Starting secure code execution...');
 
-  // Process the input data
-  input.forEach((line: string) => {
-    const [username, password] = line.split(':');
+  try {
+    // Load secure configuration from environment variables
+    const secureConfig = loadSecureConfig();
 
-    // Security issue: logging sensitive data
-    console.log(`Processing user: ${username} with password: ${password}`);
+    // Process the secure credential data
+    secureConfig.userCredentials.forEach(({ username, password }) => {
+      // Security improvement: No longer logging sensitive data
+      console.log(`Processing user: ${username}`);
 
-    // Call vulnerable functions
-    if (authenticateUser(username, password)) {
-      executeUserCommand(username); // Command injection risk
-      const userData = getUserData(username); // SQL injection risk
-      console.log(userData);
-    }
-  });
+      // Validate password strength
+      if (isValidPassword(password)) {
+        console.log(`✅ User ${username} has a strong password`);
+
+        // Generate secure session ID
+        const sessionId = generateSecureSessionId();
+        console.log(
+          `Generated secure session: ${sessionId.substring(0, 8)}...`,
+        );
+      } else {
+        console.log(`⚠️ User ${username} has a weak password`);
+      }
+    });
+  } catch (error) {
+    console.error('Configuration error:', error.message);
+    console.log('Please set up your environment variables using env.example');
+  }
 
   // Performance issues
   // const duplicates = findDuplicates(input); // Commented out unused variable
