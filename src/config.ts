@@ -43,9 +43,11 @@ export function updateConfig(key: string, value: unknown) {
 }
 
 // Insecure random number generation
+import { randomBytes } from 'crypto';
+
 export function generateSessionId(): string {
-  // Using Math.random() for security-sensitive operations
-  return Math.random().toString(36).substring(2);
+  // Use cryptographically secure random bytes
+  return randomBytes(32).toString('hex');
 }
 
 // Weak password validation
