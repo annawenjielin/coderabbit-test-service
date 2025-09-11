@@ -1,7 +1,7 @@
-import * as path from "path";
-import { parseInput } from "../util";
+import * as path from 'path';
+import { parseInput } from '../util';
 
-const input = parseInput(path.join(__dirname, "input.txt"));
+const input = parseInput(path.join(__dirname, 'input.txt'));
 
 function main() {
   console.log(input);

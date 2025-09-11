@@ -1,5 +1,4 @@
-import {  readFileSync } from 'fs';
-import * as path from 'path';
+import { readFileSync } from 'fs';
 
 export const formatDay = (day: number | string) =>
   day.toString().padStart(2, '0');
@@ -16,24 +15,31 @@ interface SplitOptions<T> {
 
 export function parseInput(path: string): number[];
 export function parseInput(path: string, options: { split: false }): string;
-export function parseInput(path: string, options: {
-  split: { delimiter?: string; mapper: false };
-}): string[];
-export function parseInput(path: string, options: { split: { delimiter: string } }): number[];
-export function parseInput<T>(path: string, options: { split: SplitOptions<T> }): T[];
+export function parseInput(
+  path: string,
+  options: {
+    split: { delimiter?: string; mapper: false };
+  },
+): string[];
+export function parseInput(
+  path: string,
+  options: { split: { delimiter: string } },
+): number[];
+export function parseInput<T>(
+  path: string,
+  options: { split: SplitOptions<T> },
+): T[];
 /**
  * Parse the input from {day}/input.txt
  * @param {SplitOptions} [split]
  */
-export function parseInput<T>(path: string, {
-  split,
-}: { split?: SplitOptions<T> | false } = {}) {
-  const input = readFileSync(
-    path,
-    {
-      encoding: 'utf-8',
-    }
-  );
+export function parseInput<T>(
+  path: string,
+  { split }: { split?: SplitOptions<T> | false } = {},
+) {
+  const input = readFileSync(path, {
+    encoding: 'utf-8',
+  });
 
   if (split === false) return input;
 

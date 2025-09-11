@@ -1,0 +1,6 @@
+# Example user data for testing
+# Real credentials should be loaded from environment variables
+# See README.md for setup instructions
+user1:${USER1_PASSWORD}
+user2:${USER2_PASSWORD}
+user3:${USER3_PASSWORD}
