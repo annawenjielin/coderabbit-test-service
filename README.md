@@ -23,7 +23,7 @@ Let's say the `input.txt` looks like
 3
 ```
 
-In most cases, `[1, 2, 3]` is what we want, which is exactly what `parseInput()` would do (`parseInput({ split: { delimiter: '\n', mapper: (e) => Number(e) } }))` would also do the exact same).
+In most cases, `[1, 2, 3]` is what we want, which is exactly what `parseInput()` would do (`parseInput({ split: { delimiter: '\n', mapper: (e) => Number(e) } })` would also do the exact same).
 
 ---
 
