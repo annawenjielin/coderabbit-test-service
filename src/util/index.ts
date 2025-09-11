@@ -5,10 +5,11 @@ export const formatDay = (day: number | string) =>
   day.toString().padStart(2, '0');
 
 /**
- * @typedef {Object} SplitOptions
- * @property {string|false} [delimiter='\n'] - a delimeter to split the input by (false will omit the splitting and return the entire input)
- * @property {funcion(string, number, string[]): *|false} [mapper=Number] - a function that will be used to map the splitted input (false will omit the mapping and return the splitted input)
- */
+  * @typedef {Object} BaseSplitOptions
+  * @property {string|RegExp} [delimiter='\n'] - a delimiter to split the input by
+  * @property {boolean} [trim=true] - when true, trims each token after splitting
+  * @property {boolean} [filterEmpty=true] - when true, filters out empty tokens after splitting/trim
+  */
 interface BaseSplitOptions {
   delimiter?: string | RegExp;
   /** When true, trims each token after splitting (default: true) */
@@ -25,14 +26,13 @@ type MappingSplitOptions<R> = BaseSplitOptions & {
 
 export function parseInput(path: string): number[];
 export function parseInput(path: string, options: { split: false }): string;
-export function parseInput(path: string, options: { split: false }): string;
 export function parseInput(path: string, options: { split: StringSplitOptions }): string[];
 export function parseInput(path: string, options: { split: NumericSplitOptions }): number[];
 export function parseInput<R>(path: string, options: { split: MappingSplitOptions<R> }): R[];
-/**
- * Parse the input from {day}/input.txt
- * @param {SplitOptions} [split]
- */
+ /**
+  * Parse the input from {day}/input.txt
+  * @param {StringSplitOptions | NumericSplitOptions | MappingSplitOptions<unknown> | false} [split]
+  */
 export function parseInput(path: string, {
   split,
 }: { split?: StringSplitOptions | NumericSplitOptions | MappingSplitOptions<unknown> | false } = {}) {
@@ -46,7 +46,7 @@ export function parseInput(path: string, {
   if (split === false) return input;
 
   const delimiter = split?.delimiter ?? '\n';
-  const splitted = typeof delimiter === 'string' ? input.split(delimiter) : input.split(delimiter);
+  const splitted = input.split(delimiter);
   const shouldTrim = split?.trim !== false; // default true
   const shouldFilterEmpty = split?.filterEmpty !== false; // default true
 

@@ -3,9 +3,9 @@
 ```
 yarn start --day=DAY
 ```
+
 - Where `0<DAY<11`
 - E.g: To run day 7: `yarn start --day=7`
-
 
 ## Util
 
@@ -16,14 +16,17 @@ By default, the function will return the `input.txt` (for the according day whic
 This behaviour can be modified by overriding these options via the [`SplitOptions`](https://github.com/izexi/aoc-ts-template/blob/master/src/util/index.ts#L3-L11) param, here are some examples to illustrate that:
 
 Let's say the `input.txt` looks like
+
 ```
 1
 2
 3
 ```
-In most cases, `[1, 2, 3]` is what we want, which is exactly what `parseInput()` would do (`parseInput({ split: { delim: '\n', mapper: (e) => Number(e) } }))` would also do the exact same).
+
+In most cases, `[1, 2, 3]` is what we want, which is exactly what `parseInput()` would do (`parseInput({ split: { delimiter: '\n', mapper: (e) => Number(e) } }))` would also do the exact same).
 
 ---
+
 Now, let's say the input looked like
 
 ```
@@ -51,6 +54,7 @@ Lastly, there may be an input that we don't want to modify at all and just handl
 ```
 ABC
 ```
+
 We can get that by doing: `parseInput({ split: false })`
 
 ---
@@ -62,6 +66,7 @@ There may a scenrio where we need to map each item in the input, for example let
 2
 3
 ```
+
 We can do that like so: `parseInput({ split: { mapper: (n) => Number(n) * 2 } })`, the parameters of the function is identical to how it would be with [`Array#map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Syntax) (and it will be passed into map in the same way) which is `(e: string, i: number, a: string[])`.
 
 ---
@@ -76,18 +81,18 @@ We can do that like so: `parseInput({ split: { mapper: (n) => Number(n) * 2 } })
 
 Examples:
 
-1) Handle mixed whitespace and blank lines (defaults trim/filterEmpty):
+1. Handle mixed whitespace and blank lines (defaults trim/filterEmpty):
 
 ```ts
-const input = parseInput(path.join(__dirname, 'input.txt'));
+const input = parseInput(path.join(__dirname, "input.txt"));
 // With default mapper Number, this yields number[] even if lines contain spaces or blanks
 ```
 
-2) Split on commas or whitespace using RegExp and keep raw strings:
+2. Split on commas or whitespace using RegExp and keep raw strings:
 
 ```ts
-const input = parseInput(path.join(__dirname, 'input.txt'), {
-  split: { delimiter: /[,\s]+/, mapper: false }
+const input = parseInput(path.join(__dirname, "input.txt"), {
+  split: { delimiter: /[,\s]+/, mapper: false },
 });
 // string[] with empty tokens removed and tokens trimmed by default
 ```
