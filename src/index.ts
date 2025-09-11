@@ -1,5 +1,3 @@
-// import { formatDay } from './util'; // Commented out unused import
-
 const args = process.argv.slice(2);
 const dayArg = args.find((arg) => arg.startsWith('--day=')) || '--day=1';
 const day = parseInt(dayArg.split('=')[1]) || 0;

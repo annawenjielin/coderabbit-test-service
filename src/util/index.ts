@@ -1,5 +1,4 @@
 import { readFileSync } from 'fs';
-// import * as path from 'path'; // Commented out unused import
 
 export const formatDay = (day: number | string) =>
   day.toString().padStart(2, '0');
