@@ -10,16 +10,20 @@ export const formatDay = (day: number | string) =>
  * @property {funcion(string, number, string[]): *|false} [mapper=Number] - a function that will be used to map the splitted input (false will omit the mapping and return the splitted input)
  */
 interface SplitOptions<T> {
-  delimiter?: string;
+  delimiter?: string | RegExp;
   mapper?: ((e: string, i: number, a: string[]) => T) | false;
+  /** When true, trims each token after splitting (default: true) */
+  trim?: boolean;
+  /** When true, filters out empty tokens after splitting/trim (default: true) */
+  filterEmpty?: boolean;
 }
 
 export function parseInput(path: string): number[];
 export function parseInput(path: string, options: { split: false }): string;
 export function parseInput(path: string, options: {
-  split: { delimiter?: string; mapper: false };
+  split: { delimiter?: string | RegExp; mapper: false; trim?: boolean; filterEmpty?: boolean };
 }): string[];
-export function parseInput(path: string, options: { split: { delimiter: string } }): number[];
+export function parseInput(path: string, options: { split: { delimiter: string | RegExp } }): number[];
 export function parseInput<T>(path: string, options: { split: SplitOptions<T> }): T[];
 /**
  * Parse the input from {day}/input.txt
@@ -37,10 +41,17 @@ export function parseInput<T>(path: string, {
 
   if (split === false) return input;
 
-  const splitted = input.split(split?.delimiter ?? '\n');
+  const delimiter = split?.delimiter ?? '\n';
+  const splitted = typeof delimiter === 'string' ? input.split(delimiter) : input.split(delimiter);
+  const shouldTrim = split?.trim !== false; // default true
+  const shouldFilterEmpty = split?.filterEmpty !== false; // default true
+
+  let tokens = shouldTrim ? splitted.map((t) => t.trim()) : splitted;
+  if (shouldFilterEmpty) tokens = tokens.filter((t) => t.length > 0);
+
   const mapper = split?.mapper;
 
   return mapper === false
-    ? splitted
-    : splitted.map((...args) => mapper?.(...args) ?? Number(args[0]));
+    ? (tokens as unknown as string[])
+    : tokens.map((...args) => (mapper?.(...(args as unknown as [string, number, string[]])) ?? Number(args[0]))) as unknown as T[];
 }

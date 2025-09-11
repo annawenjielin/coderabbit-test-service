@@ -63,3 +63,31 @@ There may a scenrio where we need to map each item in the input, for example let
 3
 ```
 We can do that like so: `parseInput({ split: { mapper: (n) => Number(n) * 2 } })`, the parameters of the function is identical to how it would be with [`Array#map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map#Syntax) (and it will be passed into map in the same way) which is `(e: string, i: number, a: string[])`.
+
+---
+
+### Extended options
+
+`parseInput` now supports additional options to make parsing more robust:
+
+- `split.delimiter?: string | RegExp` — You can pass a regular expression as the delimiter.
+- `split.trim?: boolean` — When `true` (default), trims each token after splitting.
+- `split.filterEmpty?: boolean` — When `true` (default), filters out empty tokens after splitting/trim.
+
+Examples:
+
+1) Handle mixed whitespace and blank lines (defaults trim/filterEmpty):
+
+```ts
+const input = parseInput(path.join(__dirname, 'input.txt'));
+// With default mapper Number, this yields number[] even if lines contain spaces or blanks
+```
+
+2) Split on commas or whitespace using RegExp and keep raw strings:
+
+```ts
+const input = parseInput(path.join(__dirname, 'input.txt'), {
+  split: { delimiter: /[,\s]+/, mapper: false }
+});
+// string[] with empty tokens removed and tokens trimmed by default
+```
